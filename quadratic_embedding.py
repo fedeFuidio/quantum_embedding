@@ -9,14 +9,16 @@ def Merge(dict_1, dict_2):
 	result = dict_1 | dict_2
 	return result
 
+# {(0, 0): 4, (1, 1): 3, (0, 1): 10}
 
 def auto_embedding(matrix): 
 
-    sampler_manual = DWaveSampler(solver={'topology__type': 'chimera'})
+    sampler_manual = DWaveSampler(solver={'topology__type': 'chimera'}) # pegasus
     embedding = EmbeddingComposite(sampler_manual)
     running = embedding.sample_qubo(matrix, num_reads=1000)
     print(running)
     inspector.show(running)
+    return running
 
 def auto_embedding_chain(matrix, chain = 1): 
 
@@ -25,6 +27,7 @@ def auto_embedding_chain(matrix, chain = 1):
     running = embedding.sample_qubo(matrix, num_reads=1000, chain_strength = chain)
     print(running)
     inspector.show(running)
+    
 
 def manual_embedding(qubit_biases, coupler_strengths, shots = 2):
 
@@ -35,7 +38,7 @@ def manual_embedding(qubit_biases, coupler_strengths, shots = 2):
     inspector.show(sampleset)
 
 
-set = np.array([1, 2, 3, 4, 9, 11, 15, 20])
+set = np.array([1, 2, 3])
 size = np.size(set)
 suma = sum(set)
 dimentions = int(np.floor(size/4)) # Cantidad de chimeras diagonales a usar (arrancando en cero)
@@ -44,6 +47,7 @@ dimentions = int(np.floor(size/4)) # Cantidad de chimeras diagonales a usar (arr
 qubo = np.outer(2*set, 2*set) - 2*suma*np.diag(2*set)
 print(qubo[1, :])
 
+auto_embedding_chain(qubo, 6)
 
 variables = size - 1
 shift = 0 # Arrancamos en el qubit 16*8
@@ -51,6 +55,8 @@ Q = dict()
 C = dict()
 
 
+
+'''
 for i in range(0, variables + 1):
     map = qubits_dict(i, variables, qubo, shift)
     qubits = map[0]
@@ -61,7 +67,7 @@ for i in range(0, variables + 1):
 
 manual_embedding(Q, C, 1000)
 # auto_embedding(qubo)
-
+'''
 
 '''
 for i in range(0, variables + 1):
