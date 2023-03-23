@@ -19,11 +19,12 @@ def manual_embedding(qubit_biases, coupler_strengths, shots = 2):
 
 
 # corre el qubo con un embedding automatico
-def auto_embedding(matrix, shots = 1): 
+def auto_embedding(matrix, shots = 1, chain = 1): 
     # matrix ---> matriz QUBO del problema
     # shots ---> cantidad de veces a correr el problema
+    # chain ---> Peso de la cadena (recomendado usar el maximo de los elementos no diagonales de matrix)
 
     sampler_manual = DWaveSampler(solver={'topology__type': 'chimera'})
     embedding = EmbeddingComposite(sampler_manual)
-    running = embedding.sample_qubo(matrix, num_reads=shots)
+    running = embedding.sample_qubo(matrix, num_reads=shots, chian_strength = chain)
     return running
